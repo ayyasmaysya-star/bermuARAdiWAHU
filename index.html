@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ara & Wahyu — Wedding Invitation</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071226;font-family:Arial,sans-serif}
+body{display:grid;place-items:center}
+#book{position:relative;width:min(100vw,calc(100vh * 9 / 16),430px);aspect-ratio:9/16;overflow:hidden;background:#071226}
+.page{position:absolute;inset:0;background:center/cover no-repeat;opacity:0;visibility:hidden;transform:scale(1.025);transition:opacity .8s ease,transform 1.1s cubic-bezier(.2,.8,.2,1);will-change:opacity,transform}
+.page.active{opacity:1;visibility:visible;transform:scale(1)}
+.page.leaving{opacity:0;transform:scale(.985)}
+.tap{position:absolute;border:0;background:transparent;cursor:pointer}
+.tap:focus-visible{outline:2px solid rgba(255,255,255,.8);outline-offset:3px}
+#p1{background-image:url("assets/page1.jpg")}
+#p2{background-image:url("assets/page2.jpg")}
+#p3{background-image:url("assets/page3.jpg")}
+#p4{background-image:url("assets/page4.jpg")}
+#p5{background-image:url("assets/page5.jpg")}
+#p6{background-image:url("assets/page6.jpg")}
+
+.open{left:36%;top:73.5%;width:29%;height:5.5%}
+.play{left:43%;top:72%;width:14%;height:8%}
+.map{left:28%;top:62.5%;width:46%;height:7%}
+
+.music-status{position:absolute;left:50%;top:80.5%;transform:translateX(-50%);font-size:9px;letter-spacing:.2px;color:rgba(255,255,255,.72);pointer-events:none;opacity:0;transition:.4s}
+.music-status.show{opacity:1}
+
+.pulse24{position:absolute;left:26.6%;top:28%;width:48.7%;height:31%;background:url("assets/page4-highlight.png") center/100% 100% no-repeat;filter:drop-shadow(0 0 0 rgba(255,255,255,0));opacity:.25;animation:pulse24 3.8s ease-in-out infinite;pointer-events:none}
+@keyframes pulse24{0%,100%{opacity:.12;filter:drop-shadow(0 0 1px rgba(255,255,255,.1))}50%{opacity:.62;filter:drop-shadow(0 0 8px rgba(255,255,255,.5))}}
+
+.flowerPulse{position:absolute;pointer-events:none;animation:flower 4.2s ease-in-out infinite}
+.flowerPulse.tl{left:0;top:0;width:42%;height:31%;background:url("assets/page5-top-left.png") top left/100% 100% no-repeat}
+.flowerPulse.br{right:0;bottom:0;width:46%;height:40%;background:url("assets/page5-bottom-right.png") bottom right/100% 100% no-repeat;animation-delay:1.2s}
+@keyframes flower{0%,100%{opacity:.28;filter:drop-shadow(0 0 0 rgba(255,255,255,0))}50%{opacity:.9;filter:drop-shadow(0 0 9px rgba(255,238,215,.42))}}
+
+.gift{left:35%;top:68.3%;width:30%;height:5%;border:1px solid rgba(213,184,105,.8);border-radius:999px;background:rgba(250,245,229,.92);color:#92751c;font-size:11px;letter-spacing:.4px;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.gift:active{transform:scale(.97)}
+#giftPanel{position:absolute;inset:0;background:rgba(3,12,25,.56);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:30}
+#giftPanel.show{display:flex}
+.card{width:74%;padding:24px 20px;border-radius:18px;background:#f7f3e8;color:#344c28;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center}
+.card h3{margin:0 0 14px;font-family:Georgia,serif;font-weight:400;font-size:22px}
+.account{padding:12px;border:1px solid #d5c78d;border-radius:12px;background:#fffdf7;margin:10px 0}
+.account strong{display:block;font-size:17px;letter-spacing:1px}
+.account small{display:block;margin-top:5px;color:#756b4e}
+.close{border:0;background:#92751c;color:white;padding:9px 20px;border-radius:999px;cursor:pointer;margin-top:7px}
+
+#rsvpPanel{position:absolute;inset:0;background:rgba(3,12,25,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+#rsvpPanel.show{display:flex}
+.rsvpCard{width:88%;max-height:91%;overflow:auto;background:#f7f3e8;border:1px solid #6b7c47;border-radius:18px;padding:22px;color:#526239;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.rsvpCard h2{font-family:Georgia,serif;font-weight:400;text-align:center;margin:0 0 18px;color:#526239}
+label{font-size:12px;display:block;margin:11px 0 6px}
+input,select{width:100%;padding:11px;border:1px solid #d7cfb8;border-radius:9px;background:white;color:#526239}
+.choices{display:grid;gap:7px}
+.choices button{border:1px solid #ddd5bf;background:#eee9dc;color:#7c704f;border-radius:9px;padding:11px;text-align:left;cursor:pointer}
+.choices button.selected{background:#d4bd78;color:#fff;border-color:#d4bd78}
+.submit{width:100%;border:0;background:#92751c;color:white;padding:12px;border-radius:999px;margin-top:16px;cursor:pointer}
+.cancel{display:block;margin:10px auto 0;border:0;background:transparent;color:#7a7057;cursor:pointer}
+
+#yt{position:absolute;width:1px;height:1px;left:-10px;top:-10px;opacity:.01;pointer-events:none}
+.navHint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,.28);pointer-events:none}
+</style>
+</head>
+<body>
+<div id="book">
+
+  <section class="page active" id="p1">
+    <button class="tap open" aria-label="Open Invitation" onclick="go(1)"></button>
+  </section>
+
+  <section class="page" id="p2">
+    <button class="tap play" aria-label="Play music" onclick="toggleMusic()"></button>
+    <div class="music-status" id="musicStatus">♪ Playing</div>
+  </section>
+
+  <section class="page" id="p3"></section>
+
+  <section class="page" id="p4">
+    <div class="pulse24 num24"></div><div class="pulse24 building"></div>
+    <a class="tap map" href="https://maps.app.goo.gl/3pMH6peC9myLcz8F7" target="_blank" rel="noopener" aria-label="Open location in Google Maps"></a>
+  </section>
+
+  <section class="page" id="p5">
+    <div class="flowerPulse tl"></div>
+    <div class="flowerPulse br"></div>
+  </section>
+
+  <section class="page" id="p6">
+    <button class="tap gift" onclick="openGift()">♡ Wedding Gift</button>
+    <button class="tap" style="left:28%;top:57%;width:44%;height:6%" aria-label="RSVP" onclick="openRSVP()"></button>
+  </section>
+
+  <div id="giftPanel">
+    <div class="card">
+      <h3>Wedding Gift</h3>
+      <p style="font-size:12px;line-height:1.6">Your presence is the greatest gift. If you wish to send a wedding gift, you may use the account below.</p>
+      <div class="account">
+        <strong>0000 0000 0000</strong>
+        <small>a.n. Ara & Wahyu</small>
+      </div>
+      <button class="close" onclick="closeGift()">Close</button>
+    </div>
+  </div>
+
+  <div id="rsvpPanel">
+    <form class="rsvpCard" onsubmit="submitRSVP(event)">
+      <h2>You're Invited</h2>
+      <label for="name">Your name</label>
+      <input id="name" required placeholder="Nama lengkap">
+      <label>Will you be attending our wedding?</label>
+      <div class="choices" id="attendance">
+        <button type="button" onclick="pick(this,'attendance')">Joyfully accepts</button>
+        <button type="button" onclick="pick(this,'attendance')">Regretfully declines</button>
+      </div>
+      <label>Which part of our celebration will you attend?</label>
+      <div class="choices" id="event">
+        <button type="button" onclick="pick(this,'event')">Wedding Ceremony</button>
+        <button type="button" onclick="pick(this,'event')">Wedding Reception</button>
+        <button type="button" onclick="pick(this,'event')">Both</button>
+      </div>
+      <input type="hidden" id="attendanceValue" required>
+      <input type="hidden" id="eventValue" required>
+      <button class="submit" type="submit">RSVP</button>
+      <button class="cancel" type="button" onclick="closeRSVP()">Cancel</button>
+    </form>
+  </div>
+
+  <iframe id="yt" allow="autoplay; encrypted-media" src="https://www.youtube.com/embed/thpTuOCpNfo?enablejsapi=1&playsinline=1&rel=0"></iframe>
+</div>
+
+<script>
+let current=0, player, musicOn=false;
+
+function go(n){
+  const old=document.querySelector('.page.active');
+  const next=document.getElementById('p'+(n+1));
+  if(!next)return;
+  old.classList.add('leaving');
+  old.classList.remove('active');
+  setTimeout(()=>old.classList.remove('leaving'),900);
+  next.classList.add('active');
+  current=n;
+}
+
+function toggleMusic(){
+  if(!player){
+    document.getElementById('musicStatus').textContent='♪ Loading…';
+    return;
+  }
+  if(musicOn){
+    player.pauseVideo();
+    musicOn=false;
+    document.getElementById('musicStatus').textContent='♪ Paused';
+  }else{
+    player.playVideo();
+    musicOn=true;
+    document.getElementById('musicStatus').textContent='♪ Playing';
+  }
+  document.getElementById('musicStatus').classList.add('show');
+}
+function onYouTubeIframeAPIReady(){ player=new YT.Player('yt',{events:{onReady:()=>{}}}); }
+
+function openGift(){document.getElementById('giftPanel').classList.add('show')}
+function closeGift(){document.getElementById('giftPanel').classList.remove('show')}
+function openRSVP(){document.getElementById('rsvpPanel').classList.add('show')}
+function closeRSVP(){document.getElementById('rsvpPanel').classList.remove('show')}
+
+function pick(btn,group){
+  document.querySelectorAll('#'+group+' button').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById(group==='attendance'?'attendanceValue':'eventValue').value=btn.textContent;
+}
+function submitRSVP(e){
+  e.preventDefault();
+  const name=document.getElementById('name').value;
+  const a=document.getElementById('attendanceValue').value;
+  const ev=document.getElementById('eventValue').value;
+  if(!a||!ev){alert('Please complete the RSVP first.');return}
+  alert(`Thank you, ${name}!\\n\\n${a}\\n${ev}\\n\\nYour RSVP has been recorded on this device.`);
+  closeRSVP();
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight' && current<5) go(current+1);
+  if(e.key==='ArrowLeft' && current>0) {
+    const old=document.querySelector('.page.active');
+    const next=document.getElementById('p'+current);
+    old.classList.remove('active'); next.classList.add('active'); current--;
+  }
+});
+
+let sx=0;
+document.getElementById('book').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+document.getElementById('book').addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)>60){
+    if(dx<0 && current<5)go(current+1);
+    if(dx>0 && current>0){
+      const old=document.querySelector('.page.active');
+      const next=document.getElementById('p'+current);
+      old.classList.remove('active'); next.classList.add('active'); current--;
+    }
+  }
+},{passive:true});
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
