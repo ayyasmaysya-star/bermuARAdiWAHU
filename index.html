@@ -45,6 +45,25 @@ body{display:grid;place-items:center}
 .account{padding:12px;border:1px solid #d5c78d;border-radius:12px;background:#fffdf7;margin:10px 0}
 .account strong{display:block;font-size:17px;letter-spacing:1px}
 .account small{display:block;margin-top:5px;color:#756b4e}
+  .gift-card{
+  opacity:0;
+  transform:translateY(-80px);
+}
+
+#giftPanel.show .gift-card{
+  animation:giftCardDrop .9s ease-out forwards;
+}
+
+@keyframes giftCardDrop{
+  from{
+    opacity:0;
+    transform:translateY(-80px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
 .close{border:0;background:#92751c;color:white;padding:9px 20px;border-radius:999px;cursor:pointer;margin-top:7px}
 
 #rsvpPanel{position:absolute;inset:0;background:rgba(3,12,25,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
@@ -93,7 +112,7 @@ input,select{width:100%;padding:11px;border:1px solid #d7cfb8;border-radius:9px;
   </section>
 
   <div id="giftPanel">
-    <div class="card">
+    <div class="card gift-card">
       <h3>Wedding Gift</h3>
       <p style="font-size:12px;line-height:1.6">Your presence is the greatest gift. If you wish to send a wedding gift, you may use the account below.</p>
       <div class="account">
@@ -143,7 +162,24 @@ function go(n){
   next.classList.add('active');
   current=n;
 }
+function go(n){
+  const old=document.querySelector('.page.active');
+  const next=document.getElementById('p'+(n+1));
+  if(!next)return;
+  old.classList.add('leaving');
+  old.classList.remove('active');
+  setTimeout(()=>old.classList.remove('leaving'),900);
+  next.classList.add('active');
+  current=n;
+}
 
+let autoSlide=setInterval(()=>{
+  if(current<5){
+    go(current+1);
+  }else{
+    clearInterval(autoSlide);
+  }
+},5000);
 function toggleMusic(){
   if(!player){
     document.getElementById('musicStatus').textContent='♪ Loading…';
@@ -160,7 +196,20 @@ function toggleMusic(){
   }
   document.getElementById('musicStatus').classList.add('show');
 }
-function onYouTubeIframeAPIReady(){ player=new YT.Player('yt',{events:{onReady:()=>{}}}); }
+function onYouTubeIframeAPIReady(){ 
+  player=new YT.Player('yt',{
+    events:{
+      onReady:()=>{
+        document.addEventListener('click',()=>{
+          if(!musicOn){
+            player.playVideo();
+            musicOn=true;
+          }
+        },{once:true});
+      }
+    }
+  });
+}
 
 function openGift(){document.getElementById('giftPanel').classList.add('show')}
 function closeGift(){document.getElementById('giftPanel').classList.remove('show')}
